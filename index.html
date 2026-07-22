@@ -272,6 +272,8 @@ canvas { width: 100% !important; }
 /* ── MOD NAV ── */
 .mod-nav-btn { padding: 13px 12px 11px; border: none; background: none; font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; }
 .mod-nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.mod-top-btn { flex: 1; min-width: 60px; padding: 10px 8px 9px; border: none; background: none; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; font-family: inherit; white-space: nowrap; text-align: center; }
+.mod-top-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--accent-light); }
 
 /* ── REMITOS HISTORIAL ── */
 .remito-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
@@ -499,11 +501,18 @@ canvas { width: 100% !important; }
 <!-- ── MÓDULOS (reemplazan el contenido anterior) ──────────── -->
 <!-- Barra de módulo activo -->
 <div id="modulo-bar" style="display:none;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50">
-  <div style="display:flex;align-items:center;gap:0;max-width:520px;margin:0 auto">
-    <button onclick="volverDashboard()" style="padding:13px 14px;border:none;background:none;font-size:18px;color:var(--muted);cursor:pointer;font-family:inherit;flex-shrink:0">←</button>
-    <div id="modulo-titulo" style="font-size:14px;font-weight:700;color:var(--text);flex:1"></div>
-    <div id="modulo-sub-nav" style="display:flex;overflow-x:auto;flex-shrink:0"></div>
+  <!-- Fila 1: Navegación entre módulos -->
+  <div style="display:flex;align-items:stretch;border-bottom:1px solid var(--border)">
+    <button onclick="volverDashboard()" style="padding:10px 13px;border:none;border-right:1px solid var(--border);background:none;font-size:17px;color:var(--muted);cursor:pointer;font-family:inherit;flex-shrink:0" title="Inicio">⌂</button>
+    <div style="display:flex;flex:1;overflow-x:auto">
+      <button class="mod-top-btn" id="modtop-ventas"  onclick="abrirModulo('ventas')">📦 Ventas</button>
+      <button class="mod-top-btn" id="modtop-caja"    onclick="abrirModulo('caja')">💰 Caja</button>
+      <button class="mod-top-btn" id="modtop-config"  onclick="abrirModulo('config')">⚙️ Config</button>
+    </div>
   </div>
+  <!-- Fila 2: Sub-nav del módulo activo -->
+  <div id="modulo-sub-nav" style="display:flex;overflow-x:auto;max-width:520px;margin:0 auto"></div>
+  <div id="modulo-titulo" style="display:none"></div>
 </div>
 
 <header id="main-header" style="display:none">
@@ -932,6 +941,11 @@ function abrirModulo(nombre) {
 
   // Título
   document.getElementById('modulo-titulo').textContent = mod.titulo;
+
+  // Resaltar módulo activo en la barra superior
+  document.querySelectorAll('.mod-top-btn').forEach(b => b.classList.remove('active'));
+  const topBtn = document.getElementById('modtop-' + nombre);
+  if (topBtn) topBtn.classList.add('active');
 
   // Sub-nav del módulo
   const subNav = document.getElementById('modulo-sub-nav');
